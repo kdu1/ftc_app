@@ -89,14 +89,11 @@ public class SamplingTensorFlow {
         if (updatedRecognitions == null) return "UPDATENULL";
 
         List<Recognition> filteredRecognitions = new ArrayList<>();
-        float avgTop = 200;
-        int num = 1;
         for (Recognition recognition : updatedRecognitions) {
             float height = recognition.getHeight();
             float width = recognition.getWidth();
             float ratio = height / width;
             boolean used = false;
-            float top = recognition.getTop();
             if (
                   //Check if its within normal detection size
                   height > 40 && height < 160 && width > 50 && width < 160 &&
@@ -104,19 +101,15 @@ public class SamplingTensorFlow {
                   (
                   (ratio < 1.4 && ratio > 0.5 && recognition.getLabel() == LABEL_SILVER_MINERAL) ||
                   (ratio < 1.4 && ratio > 0.75 && recognition.getLabel() == LABEL_GOLD_MINERAL)
-                  ) &&
+                  )
                   //Futher remove pit detections by ruling out detections higher up
-                  recognition.getTop() >= 100 && recognition.getTop() <= Integer.MAX_VALUE &&
-                          (recognition.getTop() < avgTop + 50 || recognition.getTop() > avgTop - 50)
+                  //recognition.getTop() >= 100 && recognition.getTop() <= Integer.MAX_VALUE &&
                   //And finally, check whether Tensorflow is happy with itself
-                  && recognition.getConfidence() > 0.6
+                  //recognition.getConfidence() > 0.6
             )
             {
                 filteredRecognitions.add(recognition);
                 used = true;
-                avgTop += top;
-                avgTop/=num;
-                num++;
             }
             telemetry.addData("h, w, r, c " + recognition.getLabel() + " " + used,
                     "%5.2f %5.2f %5.2f %5.2f", height, width, ratio, recognition.getConfidence());
@@ -145,20 +138,7 @@ public class SamplingTensorFlow {
                     silverMineral2X = (int) recognition.getLeft();
                 }
             }
-            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                    telemetry.addData("Regular Mode Detection:", "LEFT");
-                    out = "LEFT";
-                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                    telemetry.addData("Regular Mode Detection:", "RIGHT");
-                    out = "RIGHT";
-                } else {
-                    telemetry.addData("Regular Mode Detection:", "CENTER");
-                    out = "CENTER";
-                }
-            }
-            //TODO GET RID OF THIS \/!!!!!!!!!!
-            //out = columnCheck(goldMineralX);
+            out = columnCheck(goldMineralX);
         } else {
             failed3detects++; //Detecting 3 objects has failed, add to count
         }

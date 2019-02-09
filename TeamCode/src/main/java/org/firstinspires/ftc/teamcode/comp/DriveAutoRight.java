@@ -183,9 +183,9 @@ public class DriveAutoRight extends LinearOpMode {
 
         double goldMove;
         switch (goldLocation) {
-            case "RIGHT": goldMove = 27.0; break;
-            case "CENTER": goldMove = 13.0; break;
-            default: goldMove = -6.0; break;
+            case "RIGHT": goldMove = 22.0; break;
+            case "CENTER": goldMove = 8.0; break;
+            default: goldMove = -9.0; break;
         }
 
         // Gold ramming 1, position to gold ------------------------------------------
@@ -229,8 +229,8 @@ public class DriveAutoRight extends LinearOpMode {
         // Driving to depot: sneaky up on wall ------------------------------------------
         runtime.reset();
         tank.encoderMode();
-        timeout = 1.5; //1.0;
-        tank.encoderStrafe(STRAFE_SPEED/1.3, 16.0, runtime, timeout, true);
+        timeout = 2; //1.0;
+        tank.encoderStrafe(STRAFE_SPEED/1.3, 15.0, runtime, timeout, true);
         tank.stop();
 
         // Driving to depot: antisneak ------------------------------------------
@@ -241,14 +241,16 @@ public class DriveAutoRight extends LinearOpMode {
         tank.stop();
 
         // Reposition ----------------------------------
+        /*
         runtime.reset();
         timeout = 0.5; //3.0;
         tank.imu2StepTurn(imu, TURN_SPEED,TURN_SPEED/3, -135, runtime, timeout);
+        /**/
 
         // Driving to depot:  Drive Backwards for 48 inches ---------------------------------------
         runtime.reset();
         timeout = 2.0; // 6.0;
-        tank.encoderDrive(FORWARD_SPEED, 48.00, runtime, timeout, true);
+        tank.encoderDrive(FORWARD_SPEED, 46.00, runtime, timeout, true);
         tank.stop();
         tank.resetEncoder();
 
@@ -271,17 +273,17 @@ public class DriveAutoRight extends LinearOpMode {
         tank.encoderStrafe(STRAFE_SPEED/1.3, 10, runtime, timeout, true);
         tank.stop();
 
-        // Parking 3: antisneak ------------------------------------------//what does that mean???
+        // Parking 3: antisneak ------------------------------------------
         runtime.reset();
         tank.encoderMode();
         timeout = 1.5; //1.0;
-        tank.encoderStrafe(STRAFE_SPEED, -1.5, runtime, timeout, true);
+        tank.encoderStrafe(STRAFE_SPEED, -3, runtime, timeout, true);
         tank.stop();
 
         // Parking encoder drive 4. -----------------------------------------------------------------
         runtime.reset();
-        timeout = 5.0; //5.0;
-        tank.encoderDrive(FORWARD_SPEED, -50.00, runtime, timeout, true);//originally -45
+        timeout = 5; //5.0;
+        tank.encoderDrive(FORWARD_SPEED, -55.00, runtime, timeout, true);
 
         tank.stop();
         tank.encoderMode();
